@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Configurar Jornada</title>
+<style>
+  :root{
+    --bg:#0b0f14;
+    --card:#151a21;
+    --accent:#00ff87;
+    --text:#eaeaea;
+  }
+  body{margin:0;font-family:Segoe UI, sans-serif;background:var(--bg);color:var(--text);}
+  header{padding:20px;text-align:center;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);}
+  header h1{margin:0;color:var(--accent);}
+  main{max-width:900px;margin:auto;padding:20px;}
+  .match{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;display:flex;gap:10px;align-items:center;}
+  select,input{padding:6px;border-radius:6px;border:none;}
+  button{padding:10px 16px;border:none;border-radius:8px;background:var(--accent);color:#000;font-weight:bold;cursor:pointer;margin-top:12px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Admin - Configurar Jornada</h1>
+</header>
+<main>
+  <div id="matchesContainer"></div>
+  <button onclick="agregarPartido()">+ Agregar Partido</button>
+  <button onclick="guardarPartidos()">Guardar Cambios</button>
+</main>
+
+<script>
+// Lista de equipos activos
+const equipos = [
+  "América","Atlas","San Luis","Cruz Azul","Guadalajara","FC Juárez","León",
+  "Mazatlán","Monterrey","Necaxa","Pachuca","Puebla","Pumas","Querétaro",
+  "Santos","Tigres","Tijuana","Toluca"
+];
+
+// Partidos almacenados
+let partidos = JSON.parse(localStorage.getItem("partidos")) || [];
+
+// Renderizar partidos
+function renderPartidos(){
+  const container=document.getElementById("matchesContainer");
+  container.innerHTML="";
+  partidos.forEach((p,i)=>{
+    container.innerHTML+=`
+      <div class="match" data-id="${p.id}">
+        <select class="local">
+          <option value="">- Local -</option>
+          ${equipos.map(e=>`<option value="${e}" ${e===p.local?'selected':''}>${e}</option>`).join('')}
+        </select>
+        <select class="visitante">
+          <option value="">- Visitante -</option>
+          ${equipos.map(e=>`<option value="${e}" ${e===p.visitante?'selected':''}>${e}</option>`).join('')}
+        </select>
+        <input type="datetime-local" value="${p.hora || ''}" class="hora"/>
+        <select class="resultado">
+          <option value="">- Resultado -</option>
+          <option value="L" ${p.resultado==='L'?'selected':''}>L</option>
+          <option value="E" ${p.resultado==='E'?'selected':''}>E</option>
+          <option value="V" ${p.resultado==='V'?'selected':''}>V</option>
+        </select>
+        <select class="suspendido">
+          <option value="false" ${!p.suspendido?'selected':''}>Activo</option>
+          <option value="true" ${p.suspendido?'selected':''}>Suspendido</option>
+        </select>
+        <button onclick="eliminarPartido(${i})">Eliminar</button>
+      </div>
+    `;
+  });
+}
+
+function agregarPartido(){
+  const id = partidos.length ? Math.max(...partidos.map(p=>p.id))+1 : 1;
+  partidos.push({id, local:'', visitante:'', hora:'', resultado:null, suspendido:false});
+  renderPartidos();
+}
+
+function eliminarPartido(index){
+  partidos.splice(index,1);
+  renderPartidos();
+}
+
+function guardarPartidos(){
+  partidos.forEach(p=>{
+    const div=document.querySelector(`.match[data-id='${p.id}']`);
+    p.local=div.querySelector('.local').value;
+    p.visitante=div.querySelector('.visitante').value;
+    p.hora=div.querySelector('.hora').value;
+    const res=div.querySelector('.resultado').value;
+    p.resultado=res || null;
+    p.suspendido = div.querySelector('.suspendido').value === 'true';
+  });
+  localStorage.setItem("partidos",JSON.stringify(partidos));
+  alert("Partidos guardados ✅");
+}
+
+renderPartidos();
+</script>
+</body>
+</html>

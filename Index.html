@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiniela Liga MX | Tabla</title>
+
+<style>
+:root{
+  --bg:#0b0f14;
+  --card:#151a21;
+  --accent:#00ff87;
+  --text:#eaeaea;
+  --muted:#8a8f98;
+  --leader-bg:rgba(0,255,135,0.15);
+  --status-por-jugar:#f5d547;
+  --status-en-transmision:#4da6ff;
+  --status-finalizado:#1f8f5f;
+  --status-suspendido:#ff4d4d;
+}
+
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  background:url('fondo.png') no-repeat center center fixed;
+  background-size:cover;
+  color:var(--text);
+}
+
+/* HEADER */
+header{
+  padding:20px;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+header h1{margin:0;color:var(--accent);}
+
+header button{
+  padding:10px 16px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  background:var(--accent);
+  transition:0.3s;
+}
+header button:hover{background:#00d77f;}
+
+/* CLABE – AHORA SÍ VISIBLE */
+#clabeLeyenda{
+  max-width:800px;
+  margin:14px auto;
+  padding:14px 20px;
+  background:#111;
+  border:2px solid var(--accent);
+  border-radius:12px;
+  text-align:center;
+  font-size:15px;
+  font-weight:bold;
+  letter-spacing:0.5px;
+}
+
+#clabeLeyenda span{
+  display:block;
+  margin-top:6px;
+  font-size:18px;
+  color:var(--accent);
+  word-break:break-all;
+}
+
+/* MAIN */
+main{
+  padding:20px;
+  max-width:1300px;
+  margin:auto;
+}
+
+.table-card{
+  background:rgba(21,26,33,0.6);
+  border-radius:12px;
+  overflow-x:auto;
+  padding:12px;
+  backdrop-filter:blur(6px);
+}
+
+/* TABLA */
+table{
+  border-collapse:collapse;
+  width:100%;
+  min-width:1200px;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid rgba(34,34,34,0.7);
+  text-align:center;
+  font-size:13px;
+  white-space:nowrap;
+  background:rgba(21,26,33,0.4);
+}
+
+th{
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+}
+
+.sticky{
+  position:sticky;
+  left:0;
+  background:rgba(21,26,33,0.8);
+  z-index:3;
+  text-align:left;
+}
+
+.sticky-right{
+  position:sticky;
+  right:0;
+  background:rgba(21,26,33,0.8);
+  z-index:3;
+}
+
+.user{font-weight:bold;}
+
+.pick{
+  font-weight:bold;
+  border-radius:6px;
+  padding:4px;
+}
+
+.acierto{background:rgba(31,143,95,0.25);color:var(--accent);}
+.fallo{background:rgba(143,31,31,0.25);color:#ff6b6b;}
+.pendiente{color:var(--muted);}
+
+.acierto::after{content:" ✅";}
+.fallo::after{content:" ❌";}
+
+.leader{
+  background:var(--leader-bg);
+  animation:pulse 1s ease infinite alternate;
+}
+
+.status{
+  font-size:11px;
+  font-weight:bold;
+}
+
+tr:hover{
+  background:rgba(0,255,135,0.1);
+  transition:0.3s;
+}
+
+/* TOP 3 */
+#top3Menu{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:250px;
+  height:100%;
+  background:var(--card);
+  box-shadow:2px 0 10px rgba(0,0,0,0.7);
+  transition:left 0.3s;
+  z-index:999;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+}
+
+#top3Menu h2{
+  margin-top:0;
+  color:var(--accent);
+  font-size:16px;
+  text-align:center;
+}
+
+#top3Menu ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+#top3Menu li{
+  padding:8px;
+  border-bottom:1px solid #222;
+  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  animation:top3Pulse 1.5s ease-in-out infinite alternate;
+}
+
+#hamburger{
+  padding:10px;
+  cursor:pointer;
+  font-size:18px;
+  background:var(--accent);
+  border:none;
+  border-radius:8px;
+  color:#000;
+  font-weight:bold;
+}
+
+/* FOOTER */
+footer{
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:var(--text);
+  text-align:center;
+  padding:12px;
+  font-size:12px;
+}
+
+/* ANIMACIONES */
+@keyframes pulse{
+  0%{background:rgba(0,255,135,0.1);}
+  100%{background:rgba(0,255,135,0.25);}
+}
+
+@keyframes top3Pulse{
+  0%{background:rgba(0,255,135,0.08);}
+  100%{background:rgba(0,255,135,0.22);}
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  th,td{font-size:11px;padding:8px;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Quiniela Liga MX · Jornada</h1>
+  <div style="display:flex;gap:14px;align-items:center;">
+    <button onclick="location.href='generar_quiniela.html'">Crear quiniela</button>
+    <button id="hamburger">☰ Top 3</button>
+  </div>
+</header>
+
+<!-- CLABE -->
+<div id="clabeLeyenda">
+  CLABE INTERBANCARIA PARA DEPOSITAR
+  <span>123456789012345678</span>
+</div>
+
+<main>
+  <div class="table-card">
+    <table>
+      <thead id="thead"></thead>
+      <tbody id="tabla"></tbody>
+    </table>
+  </div>
+</main>
+
+<div id="top3Menu">
+  <h2>Top 3 Usuarios</h2>
+  <ul id="top3List"></ul>
+</div>
+
+<footer>
+  © 2026 Quiniela Liga MX. Todos los derechos reservados.
+</footer>
+
+<script>
+const partidos = JSON.parse(localStorage.getItem("partidos")) || [];
+const quinielas = JSON.parse(localStorage.getItem("quinielas")) || [];
+
+const thead=document.getElementById("thead");
+const tbody=document.getElementById("tabla");
+
+/* HEADER ESTATUS */
+let statusRow=`<tr><th class="sticky">#</th><th class="sticky">Usuario</th>`;
+partidos.forEach(p=>{
+  let estatus="Por jugar",color="var(--status-por-jugar)";
+  if(p.suspendido){estatus="Suspendido";color="var(--status-suspendido)";}
+  else if(p.resultado){estatus="Finalizado";color="var(--status-finalizado)";}
+  statusRow+=`<th class="status" style="color:${color}">${estatus}</th>`;
+});
+statusRow+=`<th class="sticky-right">Aciertos</th></tr>`;
+
+/* HEADER PARTIDOS */
+let headRow=`<tr><th class="sticky">#</th><th class="sticky">Usuario</th>`;
+partidos.forEach(p=>{
+  const h=p.hora?new Date(p.hora).toLocaleString('es-MX',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+  headRow+=`<th>${p.local}-${p.visitante}<br><small>${h}</small></th>`;
+});
+headRow+=`<th class="sticky-right">Aciertos</th></tr>`;
+
+thead.innerHTML=statusRow+headRow;
+
+/* TABLA */
+let filas=[],max=0;
+quinielas.forEach((q,i)=>{
+  let a=0;
+  q.picks.forEach((p,j)=>{if(partidos[j]?.resultado===p)a++;});
+  max=Math.max(max,a);
+  filas.push({i,q,a});
+});
+filas.sort((a,b)=>b.a-a.a);
+
+filas.forEach(f=>{
+  let tr=`<tr class="${f.a===max&&max>0?'leader':''}">
+  <td class="sticky">${f.i+1}</td>
+  <td class="sticky user">${f.q.usuario}</td>`;
+  f.q.picks.forEach((p,j)=>{
+    const r=partidos[j]?.resultado;
+    let c="pendiente";
+    if(r)c=p===r?"acierto":"fallo";
+    tr+=`<td class="pick ${c}">${p}</td>`;
+  });
+  tr+=`<td class="sticky-right">${f.a}</td></tr>`;
+  tbody.innerHTML+=tr;
+});
+
+/* TOP 3 */
+const ul=document.getElementById("top3List");
+filas.slice(0,3).forEach((f,i)=>{
+  ul.innerHTML+=`<li><span>${i+1}. ${f.q.usuario}</span><span>${f.a} ✅</span></li>`;
+});
+
+document.getElementById("hamburger").onclick=()=>{
+  const m=document.getElementById("top3Menu");
+  m.style.left=m.style.left==="0px"?"-260px":"0px";
+};
+</script>
+</body>
+</html>
